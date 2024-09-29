@@ -9,7 +9,7 @@ services:
       - "5099:5000"
     volumes:
       - mlflow_runs:/mlflow:rw
-    entrypoint: mlflow server --backend-store-uri postgresql://mlflow_user:mlflow_pass@postgres_mlflow:5432/mlflow_db --default-artifact-root file:/mlflow/mlruns --host 0.0.0.0
+    entrypoint: mlflow server --backend-store-uri postgresql://mlflow_user:mlflow_pass@postgres_mlflow:5432/mlflow_db --host 0.0.0.0
     depends_on:
       - postgres_mlflow
 
