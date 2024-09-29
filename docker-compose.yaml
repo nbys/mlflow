@@ -1,0 +1,30 @@
+services:
+  mlflow:
+    build: .
+    container_name: mlflow
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5099
+      - MLFLOW_TRACKING_DB_URI=postgresql://mlflow_user:mlflow_pass@postgres_mlflow:5432/mlflow_db
+    ports:
+      - "5099:5000"
+    volumes:
+      - mlflow_runs:/mlflow:rw
+    entrypoint: mlflow server --backend-store-uri postgresql://mlflow_user:mlflow_pass@postgres_mlflow:5432/mlflow_db --default-artifact-root file:/mlflow/mlruns --host 0.0.0.0
+    depends_on:
+      - postgres_mlflow
+
+  postgres_mlflow:
+    image: postgres:13
+    container_name: postgres_mlflow
+    environment:
+      POSTGRES_DB: mlflow_db
+      POSTGRES_USER: mlflow_user
+      POSTGRES_PASSWORD: mlflow_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  mlflow_runs:
